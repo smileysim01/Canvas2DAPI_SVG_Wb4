@@ -27,13 +27,16 @@ import * as utilities from "./04-04-utilities.js";
  * @param {number} y2
  */
 function twoDots(context, x1, y1, x2, y2) {
-    let a = 5;
-    let b = 0;
-    let c = 0;
-    let d = 5;
-    let e = x2;
-    let f = y2;
+    let s = Math.pow((Math.pow(x2-x1,2)+Math.pow(y2-y1,2)),0.5)/10;
+    let angle = Math.atan2((y2-y1),(x2-x1));
+    let a = Math.cos(angle)*s;
+    let b = Math.sin(angle)*s;
+    let c = -Math.sin(angle)*s;
+    let d = Math.cos(angle)*s;
+    let e = x1;
+    let f = y1;
     // please leave this line - you should CHANGE the 6 lines above. Add additional math/logic code as needed.
+    
     context.transform(a, b, c, d, e, f);
 }
 

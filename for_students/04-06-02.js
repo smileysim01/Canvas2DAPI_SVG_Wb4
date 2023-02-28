@@ -19,8 +19,10 @@ if (!(canvas instanceof HTMLCanvasElement))
 let thePoints = [
     [100, 100],
     [200, 100],
-    [200, 200],
-    [100, 200]
+    [250,175],
+    [200, 250],
+    [100, 250],
+    [50,175]
 ];
 
 /**
@@ -31,8 +33,10 @@ let thePoints = [
  * 
  * @param {DOMHighResTimeStamp} timestamp 
  */
+
 function draw(timestamp) {
     // Begin Example Solution
+    let context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.lineJoin = "round";
     /** @type {number} */ const r0 = 10;

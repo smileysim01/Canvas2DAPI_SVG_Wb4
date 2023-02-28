@@ -26,8 +26,13 @@ import * as utilities from "./04-04-utilities.js";
  * @param {number} y2
  */
 function twoDots(context, x1, y1, x2, y2) {
+    context.save();
     context.translate(x1, y1);
-    context.scale(5, 5);
+
+    let s = Math.pow((Math.pow(x2-x1,2)+Math.pow(y2-y1,2)),0.5)/10;
+
+    context.scale(s, s);
+    context.rotate(Math.atan2((y2-y1),(x2-x1)));
 }
 
 utilities.setup("canvas1", twoDots, "black");

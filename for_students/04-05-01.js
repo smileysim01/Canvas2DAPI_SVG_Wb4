@@ -22,6 +22,7 @@ class Boid {
      * @param {number} vy   - initial Y velocity
      */
     constructor(x, y, vx = 1, vy = 0) {
+        this.s = 0;
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -34,8 +35,17 @@ class Boid {
     draw(context) {
         context.save();
         context.translate(this.x, this.y);
-        context.fillStyle = "blue";
-        context.fillRect(-5, -5, 10, 10);
+        context.fillStyle = this.s > 0? "red":"#DFFF00";
+        context.strokeStyle = "black";
+        context.lineWidth = 2;
+        context.rotate(Math.atan2(this.vy,this.vx));
+        context.beginPath();
+        context.lineTo(10,0);
+        context.lineTo(-5,5);
+        context.lineTo(-5,-5);
+        context.closePath();
+        context.fill();
+        context.stroke();
         context.restore();
     }
     /**
@@ -108,10 +118,16 @@ boids.push(new Boid(400, 400, 0, 1));
  * Handle the buttons
  */
 document.getElementById("add").onclick = function () {
-    // Students Fill This In
+    for(let i=0; i<10; i++){
+        let add_x = Math.random()*canvas.width;
+        let add_y = Math.random()*canvas.height;
+        let angle = Math.random()*2*Math.PI;
+
+        boids.push(new Boid(add_x,add_y,Math.cos(angle),Math.sin(angle)));
+    }
 };
 document.getElementById("clear").onclick = function () {
-    // Student Fill This In
+    boids.length = 0;
 };
 
 let lastTime; // will be undefined by default
@@ -125,6 +141,7 @@ function loop(timestamp) {
 
     // change directions
     boids.forEach(boid => boid.steer(boids));
+
     // move forward
     let speed = Number(speedSlider.value);
     boids.forEach(function (boid) {
@@ -136,10 +153,45 @@ function loop(timestamp) {
         /**
          * Students should replace this with collision code
          */
-        boid.x = boid.x % canvas.width;
-        boid.y = boid.y % canvas.height;
-        if (boid.x < 0) boid.x += canvas.width;
-        if (boid.y < 0) boid.y += canvas.height;
+        // boid.x = boid.x % canvas.width;
+        // boid.y = boid.y % canvas.height;
+        // if (boid.x < 0) boid.x += canvas.width;
+        // if (boid.y < 0) boid.y += canvas.height;
+        boids.forEach(function(boid2){
+            if(((Math.pow(boid.x-boid2.x,2)+Math.pow(boid.y-boid2.y,2) <= 144) && (boid.x != boid2.x || boid.y != boid2.y))){
+                boid.s = 12;
+                if(boid.x != boid2.x){
+                    boid2.vx *= -1;
+                    boid2.x = 2*boid2.x - boid.x;
+                }
+                if(boid.y != boid2.y){
+                    boid2.y = 2*boid2.y - boid.y;
+                    boid2.vy *= -1;
+                }
+            }
+        });
+        if(boid.x >= canvas.width){
+            boid.vx *= -1;
+            boid.s = 12;
+            boid.x = (2*canvas.width) - boid.x;
+        }
+        else if(boid.x <= 0){
+            boid.vx *= -1;
+            boid.s = 12;
+            boid.x *= -1;
+        }
+        if(boid.y >= canvas.height){
+            boid.vy *= -1;
+            boid.s = 12;
+            boid.y = (2*canvas.height) - boid.y;
+        }
+        else if(boid.y <= 0){
+            boid.vy *= -1;
+            boid.s = 12;
+            boid.y *= -1;
+        }
+
+        boid.s = Math.max(0,boid.s-1);
     });
     // now we can draw
     draw();

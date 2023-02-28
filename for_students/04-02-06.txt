@@ -4,4 +4,4 @@ context.scale(2,3);
 is equivalent to:
 
 context.scale(2,3);
-context.translate(??, ??);
+context.translate(3/2, 4/3);
